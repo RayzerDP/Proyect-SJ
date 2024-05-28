@@ -1,0 +1,93 @@
+
+Comando para correr la Api: mvnw.cmd spring-boot:run
+Comando para correr la Api: npm start
+
+
+CREATE TABLE Compra (
+    id_compra INT IDENTITY(1,1) PRIMARY KEY,
+    fecha DATETIME,
+    datos_adicionales VARCHAR(100)
+);
+
+CREATE TABLE Categoria (
+    id_categoria INT IDENTITY(1,1) PRIMARY KEY,
+    descripcion VARCHAR(60)
+);
+
+CREATE TABLE Usuario (
+    id_usuario INT IDENTITY(1,1) PRIMARY KEY,
+    nombre_usuario VARCHAR(20),
+    contrasena VARCHAR(20),
+    nombre_completo VARCHAR(512),
+    email VARCHAR(250),
+    rut VARCHAR(15)
+);
+
+
+CREATE TABLE Recurso (
+    id_recurso INT IDENTITY(1,1) PRIMARY KEY,
+    nombre VARCHAR(30),
+    descripcion VARCHAR(60),
+    fecha_ingreso DATETIME,
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+);
+
+CREATE TABLE Detalle_Compra (
+    id_detalle_compra INT IDENTITY(1,1) PRIMARY KEY,
+    id_compra INT,
+    id_recurso INT,
+    cantidad INT,
+    precio_unitario DECIMAL(18, 2),
+    FOREIGN KEY (id_compra) REFERENCES Compra(id_compra),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
+
+CREATE TABLE Proveedor (
+    id_proveedor INT IDENTITY(1,1) PRIMARY KEY,
+    razon_social VARCHAR(50),
+    codigo_tributario VARCHAR(15),
+    direccion VARCHAR(50),
+    email VARCHAR(64),
+    fono VARCHAR(15)
+);
+
+CREATE TABLE Movimiento_Inventario (
+    id_movimiento INT IDENTITY(1,1) PRIMARY KEY,
+    tipo_movimiento VARCHAR(20),
+    fecha_movimiento DATETIME,
+    id_usuario INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+
+CREATE TABLE Detalle_Movimiento (
+    id_detalle_movimiento INT IDENTITY(1,1) PRIMARY KEY,
+    id_movimiento INT,
+    id_recurso INT,
+    cantidad INT,
+    FOREIGN KEY (id_movimiento) REFERENCES Movimiento_Inventario(id_movimiento),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
+
+
+
+CREATE TABLE Pedido (
+    id_pedido INT IDENTITY(1,1) PRIMARY KEY,
+    fecha_creacion DATETIME,
+    estado VARCHAR(50),
+    observaciones VARCHAR(250),
+    id_usuario INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+
+CREATE TABLE Detalle_Pedido (
+    id_detalle_pedido INT IDENTITY(1,1) PRIMARY KEY,
+    id_pedido INT,
+    id_recurso INT,
+    cantidad INT,
+    precio_unitario DECIMAL(18, 2),
+    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
