@@ -1,0 +1,161 @@
+spring.application.name=restapi
+
+Comando para correr la Api: mvnw.cmd spring-boot:run
+
+FALTA AGREGAR IMAGEN EN USUARIO  
+FALTA AGREGAR NOMBRE DE CATEGORIA
+FALTA PLANTEAR LA INTERFAZ DE PRODUCTOS
+
+CREATE TABLE Compra (
+    id_compra INT IDENTITY(1,1) PRIMARY KEY,
+    fecha DATETIME,
+    datos_adicionales VARCHAR(100)
+);
+
+CREATE TABLE Categoria (
+    id_categoria INT IDENTITY(1,1) PRIMARY KEY,
+    descripcion VARCHAR(60)
+);
+
+CREATE TABLE Usuario (
+    id_usuario INT IDENTITY(1,1) PRIMARY KEY,
+    nombre_usuario VARCHAR(20),
+    tipo_usuario VARCHAR(20),
+    contrasena VARCHAR(20),
+    nombre VARCHAR(512),
+    apellido VARCHAR(512),	
+    email VARCHAR(250),
+    rut VARCHAR(15)
+);
+
+
+CREATE TABLE Recurso (
+    id_recurso INT IDENTITY(1,1) PRIMARY KEY,
+    nombre VARCHAR(30),
+    descripcion VARCHAR(60),
+    fecha_ingreso DATETIME,
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+);
+
+CREATE TABLE Detalle_Compra (
+    id_detalle_compra INT IDENTITY(1,1) PRIMARY KEY,
+    id_compra INT,
+    id_recurso INT,
+    cantidad INT,
+    precio_unitario DECIMAL(18, 2),
+    FOREIGN KEY (id_compra) REFERENCES Compra(id_compra),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
+
+CREATE TABLE Proveedor (
+    id_proveedor INT IDENTITY(1,1) PRIMARY KEY,
+    razon_social VARCHAR(50),
+    codigo_tributario VARCHAR(15),
+    direccion VARCHAR(50),
+    email VARCHAR(64),
+    fono VARCHAR(15)
+);
+
+CREATE TABLE Movimiento_Inventario (
+    id_movimiento INT IDENTITY(1,1) PRIMARY KEY,
+    tipo_movimiento VARCHAR(20),
+    fecha_movimiento DATETIME,
+    id_usuario INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+
+CREATE TABLE Detalle_Movimiento (
+    id_detalle_movimiento INT IDENTITY(1,1) PRIMARY KEY,
+    id_movimiento INT,
+    id_recurso INT,
+    cantidad INT,
+    FOREIGN KEY (id_movimiento) REFERENCES Movimiento_Inventario(id_movimiento),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
+
+
+
+CREATE TABLE Pedido (
+    id_pedido INT IDENTITY(1,1) PRIMARY KEY,
+    fecha_creacion DATETIME,
+    estado VARCHAR(50),
+    observaciones VARCHAR(250),
+    id_usuario INT,
+    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
+
+CREATE TABLE Detalle_Pedido (
+    id_detalle_pedido INT IDENTITY(1,1) PRIMARY KEY,
+    id_pedido INT,
+    id_recurso INT,
+    cantidad INT,
+    precio_unitario DECIMAL(18, 2),
+    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido),
+    FOREIGN KEY (id_recurso) REFERENCES Recurso(id_recurso)
+);
+
+
+//NUEVA BASE DE DATOS//
+
+-- Crear tablas
+CREATE TABLE area_trabajo (
+    id_area_trabajo INT IDENTITY PRIMARY KEY,
+    nombre_area VARCHAR(255),
+    descripcion VARCHAR(255)
+);
+
+CREATE TABLE categoria (
+    id_categoria INT IDENTITY PRIMARY KEY,
+    descripcion VARCHAR(255)
+);
+
+CREATE TABLE usuario (
+    id_usuario INT IDENTITY PRIMARY KEY,
+    nombre_usuario VARCHAR(255),
+    tipo_usuario VARCHAR(255),
+    contrasena VARCHAR(255),
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    email VARCHAR(255),
+    rut VARCHAR(255),
+    id_area_trabajo INT,
+    FOREIGN KEY (id_area_trabajo) REFERENCES area_trabajo(id_area_trabajo)
+);
+
+CREATE TABLE recurso (
+    id_recurso INT IDENTITY PRIMARY KEY,
+    nombre VARCHAR(255),
+    descripcion VARCHAR(255),
+    cantidad INT,
+    fecha_ingreso DATETIME,
+    id_area_trabajo INT,
+    id_categoria INT,
+    FOREIGN KEY (id_area_trabajo) REFERENCES area_trabajo(id_area_trabajo),
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+);
+
+-- Insertar datos
+INSERT INTO area_trabajo (nombre_area, descripcion) VALUES 
+('Comida', 'Área encargada de la gestión de alimentos'),
+('Tecnología', 'Área encargada de la gestión de equipos tecnológicos');
+
+INSERT INTO categoria (descripcion) VALUES 
+('Computadoras'),
+('Libros');
+
+INSERT INTO usuario (nombre_usuario, tipo_usuario, contrasena, nombre, apellido, email, rut, id_area_trabajo) VALUES 
+('user1', 'admin', 'password1', 'John', 'Doe', 'john@example.com', '12345678-9', (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Comida')),
+('user2', 'admin', 'password2', 'Jane', 'Doe', 'jane@example.com', '98765432-1', (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Tecnología'));
+
+INSERT INTO recurso (nombre, descripcion, cantidad, fecha_ingreso, id_area_trabajo, id_categoria) VALUES 
+('Laptop', 'Laptop Dell', 10, GETDATE(), (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Tecnología'), (SELECT id_categoria FROM categoria WHERE descripcion = 'Computadoras')),
+('Libro de Cocina', 'Libro de recetas', 5, GETDATE(), (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Comida'), (SELECT id_categoria FROM categoria WHERE descripcion = 'Libros')),
+('Monitor', 'Monitor LG', 15, GETDATE(), (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Tecnología'), (SELECT id_categoria FROM categoria WHERE descripcion = 'Computadoras')),
+('Libro de Nutrición', 'Libro sobre nutrición', 8, GETDATE(), (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Comida'), (SELECT id_categoria FROM categoria WHERE descripcion = 'Libros'));
+
+-- Añadir un nuevo recurso al usuario user1
+INSERT INTO recurso (nombre, descripcion, cantidad, fecha_ingreso, id_area_trabajo, id_categoria) VALUES 
+('Nueva Laptop', 'Laptop HP', 20, GETDATE(), (SELECT id_area_trabajo FROM area_trabajo WHERE nombre_area = 'Comida'), (SELECT id_categoria FROM categoria WHERE descripcion = 'Computadoras'));
