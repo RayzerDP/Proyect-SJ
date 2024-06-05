@@ -10,6 +10,7 @@ public class Categoria {
     private String descripcion;
 
     // Getters y Setters
+
     public Integer getIdCategoria() {
         return idCategoria;
     }

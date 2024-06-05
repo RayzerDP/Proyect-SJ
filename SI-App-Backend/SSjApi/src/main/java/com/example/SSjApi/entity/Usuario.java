@@ -8,12 +8,19 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idUsuario;
     private String nombreUsuario;
+    private String tipoUsuario;
     private String contrasena;
-    private String nombreCompleto;
+    private String nombre;
+    private String apellido;
     private String email;
     private String rut;
 
-    // Getters y Setters
+    @ManyToOne
+    @JoinColumn(name = "idAreaTrabajo")
+    private AreaTrabajo areaTrabajo;
+
+    // Getters y setters
+
     public Integer getIdUsuario() {
         return idUsuario;
     }
@@ -30,6 +37,14 @@ public class Usuario {
         this.nombreUsuario = nombreUsuario;
     }
 
+    public String getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+
     public String getContrasena() {
         return contrasena;
     }
@@ -38,12 +53,20 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public String getNombreCompleto() {
-        return nombreCompleto;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -60,5 +83,13 @@ public class Usuario {
 
     public void setRut(String rut) {
         this.rut = rut;
+    }
+
+    public AreaTrabajo getAreaTrabajo() {
+        return areaTrabajo;
+    }
+
+    public void setAreaTrabajo(AreaTrabajo areaTrabajo) {
+        this.areaTrabajo = areaTrabajo;
     }
 }
