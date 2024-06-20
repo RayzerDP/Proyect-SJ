@@ -12,6 +12,9 @@ public class Recurso {
     private String descripcion;
     private int cantidad;
     private Date fechaIngreso;
+    private String observaciones; // Nuevo campo
+    private String proveedor; // Nuevo campo
+    private Integer cantidadMinima;
 
     @ManyToOne
     @JoinColumn(name = "idAreaTrabajo")
@@ -20,6 +23,10 @@ public class Recurso {
     @ManyToOne
     @JoinColumn(name = "idCategoria")
     private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
 
     // Getters y setters
 
@@ -63,6 +70,22 @@ public class Recurso {
         this.fechaIngreso = fechaIngreso;
     }
 
+    public String getObservaciones() { // Nuevo método getter
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) { // Nuevo método setter
+        this.observaciones = observaciones;
+    }
+
+    public String getProveedor() { // Nuevo método getter
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) { // Nuevo método setter
+        this.proveedor = proveedor;
+    }
+
     public AreaTrabajo getAreaTrabajo() {
         return areaTrabajo;
     }
@@ -77,5 +100,21 @@ public class Recurso {
 
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
+    }
+
+    public Integer getCantidadMinima() {
+        return cantidadMinima;
+    }
+
+    public void setCantidadMinima(Integer cantidadMinima) {
+        this.cantidadMinima = cantidadMinima;
+    }
+
+    public Usuario getUsuario() { // Añade este getter
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) { // Añade este setter
+        this.usuario = usuario;
     }
 }
